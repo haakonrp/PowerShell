@@ -4,7 +4,7 @@ function idle {
 	"Press CTRL+C to cancel."
 	while ($true) {
 		$wshell.SendKeys('+')
-		Sleep 60
+		Start-Sleep 60
 	}
 }
 

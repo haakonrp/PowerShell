@@ -1,31 +1,31 @@
 # show list of installed jdks and let user set new jdk on path
 function setjdk {
-
-    $JavaHome = [Environment]::GetEnvironmentVariable('JAVA_HOME', [System.EnvironmentVariableTarget]::Machine)
-    $CurrentJavaParent = $JavaHome | Split-Path -Parent
+	
+	$JavaHome = [Environment]::GetEnvironmentVariable('JAVA_HOME', [System.EnvironmentVariableTarget]::Machine)
+	$CurrentJavaParent = $JavaHome | Split-Path -Parent
 	$CurrentJavaVersion = $JavaHome | Split-Path -Leaf
-
+	
 	$JdkList = Get-ChildItem -Path $CurrentJavaParent -Name
-	$Selection = Create-Menu -MenuTitle "Installed JDKs:" -MenuOptions $JdkList
+	$Selection = New-Menu -MenuTitle "Installed JDKs:" -MenuOptions $JdkList
 	$SelectedJavaVersion = $JdkList[$Selection]
 	$JavaHome = $CurrentJavaParent + "\" + $SelectedJavaVersion
-		
+	
 	[Environment]::SetEnvironmentVariable('Path', "$JavaHome\bin;$path", [System.EnvironmentVariableTarget]::Process)
 	Write-Host -BackgroundColor Green -ForegroundColor Black "`nNew JDK set: $CurrentJavaVersion -> $SelectedJavaVersion"
 
-    try {
+	try {
 		[Environment]::SetEnvironmentVariable('JAVA_HOME', $JavaHome, [System.EnvironmentVariableTarget]::Machine)
-    } catch {
-        Write-Host -BackgroundColor Red -ForegroundColor Black "Unable to set JDK permanently, try running as admin..."
-    }
+	} catch {
+		Write-Host -BackgroundColor Red -ForegroundColor Black "Unable to set JDK permanently, try running as admin..."
+	}
 	
 	""
 	java -version
-	
+
 }
 
 # helper function to create user selectable list
-function Create-Menu () {
+function New-Menu () {
 	
 	Param(
 		[Parameter(Mandatory=$True)][String] $MenuTitle,
